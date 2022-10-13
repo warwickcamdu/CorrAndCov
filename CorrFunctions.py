@@ -7,12 +7,6 @@ import bioformats
 from skimage.transform import rescale
 import tifffile as tif
 
-# Define parameters:
-scalefactor = 0.2
-offset = 60
-# data_path = /path/to/data
-# Code assumes there are multiple folders with same named image files
-
 
 def start_java_vm():
     '''
@@ -99,7 +93,7 @@ def create_image_dictionary(data_path, scalefactor):
 
     Parameters:
         data_path (str): path to folder where data is stored
-        scalefactor (float, tuple of floats): scale factor to downsize image by
+        scalefactor (float): scale factor to downscale image by
 
     Returns:
         image_dict (dict): names and normalised images e.g.
@@ -117,13 +111,14 @@ def create_image_dictionary(data_path, scalefactor):
     return image_dict
 
 
-def cross_correlation(image1, image2, offset):
+def cross_correlation(image1, image2, scalefactor, offset):
     '''
     Auto- and cross-correlation
 
     Parameters:
         image1, image2 (numpy arrays): images to compare
         offset (int): shift in pixels relative to the reference image
+        scalefactor (float): scale factor to upscale image by
 
     Returns:
         corr (list of floats): list of corrolation values for each offset value
@@ -197,6 +192,7 @@ def main():
     try:
         data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/3011_ATP_Example/data files'
         scalefactor = 0.2
+        offset = 60
         actin_folder = 'actin'
         # run steps
         start_java_vm()
@@ -215,7 +211,10 @@ def main():
                             for s in image_dict[im].keys()]
             for c in set(combinations):
                 corr = cross_correlation(
-                    image_dict[im][c[0]], image_dict[im][c[1]], 10)
+                    image_dict[im][c[0]],
+                    image_dict[im][c[1]],
+                    scalefactor,
+                    offset)
                 tif.imsave(os.path.join(results_path, 'corr_'
                            + im+'_'+c[0]+c[1]+'.tif'), corr)
                 for co in range(corr.shape[0]):
