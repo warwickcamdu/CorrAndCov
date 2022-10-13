@@ -142,6 +142,16 @@ def cross_correlation(image1, image2, offset):
 
 
 def coefficient_of_variation(image, scalefactor):
+    '''
+    Calculate coefficient of variation
+
+    Parameters:
+        image (numpy array): 2D+t image
+        scalefactor (float): scale factor to upscale resulting CoV image
+
+    Returns:
+        CoV_map (numpy array): Calculated CoV (2D)
+    '''
     # Calculate coefficinet of variation
     mean_t_image = np.mean(image, axis=0)
     std_t_image = np.std(image, axis=0)
@@ -151,6 +161,19 @@ def coefficient_of_variation(image, scalefactor):
 
 
 def create_scatter_figure(CoV_actin, corr, title, save_location):
+    '''
+    Plot actin coefficient of variation against cross-correlation values and
+    save figure
+
+    Parameters:
+        CoV_actin (numpy array): coefficient of variation for actin channel
+        corr (numpy array): Cross-correlation values from another channel
+        title (string): Title of figure
+        save_location (string): Path to location to save data
+
+    Returns:
+        Saves .png file in save_location
+    '''
     fig = plt.figure()
     plt.scatter(CoV_actin[corr >= 0], corr[corr >= 0],
                 marker='o', facecolors='none', edgecolors='blue')
@@ -167,7 +190,10 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
 
 
 def main():
-    # set paramters
+    '''
+    Read in data, calculate auto- and cross-correlation and coefficient of
+    variance, output images and figures of results.
+    '''
     try:
         data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/3011_ATP_Example/data files'
         scalefactor = 0.2
