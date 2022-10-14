@@ -188,6 +188,19 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
 
 
 def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
+    '''
+    Read in data, calculate auto- and cross-correlation and coefficient of
+    variance, output images and figures of results.
+
+    Parameters:
+        data_path (str): path to folder where data is stored
+        actin_folder (str): name of folder containing actin images
+        scalefactor (float): scale factor to downscale image by
+        offset (int): shift in pixels relative to the reference image
+
+    Returns:
+        Saves .png files in folder above data folder
+    '''
     try:
         # run steps
         start_java_vm()
@@ -223,10 +236,6 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
 
 
 def main():
-    '''
-    Read in data, calculate auto- and cross-correlation and coefficient of
-    variance, output images and figures of results.
-    '''
     data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/' \
                 '3011_ATP_Example/data files'
     scalefactor = 0.2
