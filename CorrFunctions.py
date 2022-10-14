@@ -239,7 +239,7 @@ def main():
     data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/' \
                 '3011_ATP_Example/data files'
     scalefactor = 0.2
-    offset = 60
+    offset = 10
     actin_folder = 'actin'
     calculate_and_create_figures(data_path, actin_folder, scalefactor, offset)
 
