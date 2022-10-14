@@ -184,16 +184,8 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
     plt.close()
 
 
-def main():
-    '''
-    Read in data, calculate auto- and cross-correlation and coefficient of
-    variance, output images and figures of results.
-    '''
+def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
     try:
-        data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/3011_ATP_Example/data files'
-        scalefactor = 0.2
-        offset = 60
-        actin_folder = 'actin'
         # run steps
         start_java_vm()
         image_dict = create_image_dictionary(data_path, scalefactor)
@@ -224,6 +216,18 @@ def main():
                             cov_act, corr[co, ...], title, results_path)
     finally:
         end_java_vm()
+
+
+def main():
+    '''
+    Read in data, calculate auto- and cross-correlation and coefficient of
+    variance, output images and figures of results.
+    '''
+    data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/3011_ATP_Example/data files'
+    scalefactor = 0.2
+    offset = 60
+    actin_folder = 'actin'
+    calculate_and_create_figures(data_path, actin_folder, scalefactor, offset)
 
 
 if __name__ == "__main__":
