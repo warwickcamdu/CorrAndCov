@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QMainWindow
 from PyQt5.QtWidgets import QLabel, QLineEdit, QGridLayout, QStyle
 from PyQt5.QtWidgets import QFileDialog, QAction, QMessageBox
-from PyQt5.QtGui import QIcon, QDoubleValidator, QIntValidator, QPixmap
+from PyQt5.QtGui import QIcon, QDoubleValidator, QIntValidator
 from PyQt5.QtCore import QSettings
 import os.path
 import webbrowser

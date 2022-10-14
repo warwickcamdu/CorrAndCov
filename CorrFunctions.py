@@ -123,14 +123,17 @@ def cross_correlation(image1, image2, scalefactor, offset):
     Returns:
         corr (list of floats): list of corrolation values for each offset value
     '''
-    corr = np.zeros([offset+1, int((1/scalefactor)*image1.shape[1]),
+    if offset > image1.shape[0]:
+        offset = image1.shape[0]-1
+    corr = np.zeros([offset, int((1/scalefactor)*image1.shape[1]),
                     int((1/scalefactor)*image1.shape[2])])
-    for i in range(offset+1):
+    for i in range(offset):
         tshift = np.roll(image2, i, axis=0)
-        t = image1[i+1:, :, :] - np.mean(image1[i+1:, :, :], axis=0)
-        tshift = tshift[i+1:, :, :] - np.mean(tshift[i+1:, :, :], axis=0)
-        corr_small = (np.sum(np.multiply(t, tshift), axis=0)
-                      / (tshift.shape[0]))/(np.std(t, axis=0)*np.std(tshift, axis=0))
+        t = image1[i:, :, :] - np.mean(image1[i:, :, :], axis=0)
+        tshift = tshift[i:, :, :] - np.mean(tshift[i:, :, :], axis=0)
+        total_of_multiple = np.sum(np.multiply(t, tshift), axis=0)
+        multipe_of_stds = (np.std(t, axis=0)*np.std(tshift, axis=0))
+        corr_small = (total_of_multiple/tshift.shape[0])/multipe_of_stds
         corr[i, ...] = rescale(corr_small, 1/scalefactor,
                                anti_aliasing=False, order=3)
     return corr
@@ -199,7 +202,8 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
                     results_path, 'cov_'+im+'_'+ch+'.tif'), cov)
                 if ch == actin_folder:
                     cov_act = cov
-            combinations = [tuple(sorted((f, s))) for f in image_dict[im].keys()
+            combinations = [tuple(sorted((f, s)))
+                            for f in image_dict[im].keys()
                             for s in image_dict[im].keys()]
             for c in set(combinations):
                 corr = cross_correlation(
@@ -223,7 +227,8 @@ def main():
     Read in data, calculate auto- and cross-correlation and coefficient of
     variance, output images and figures of results.
     '''
-    data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/3011_ATP_Example/data files'
+    data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/' \
+                '3011_ATP_Example/data files'
     scalefactor = 0.2
     offset = 60
     actin_folder = 'actin'
