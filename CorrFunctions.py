@@ -6,6 +6,7 @@ import javabridge
 import bioformats
 from skimage.transform import rescale
 import tifffile as tif
+from imresize import imresize
 
 
 def start_java_vm():
@@ -60,12 +61,16 @@ def coarse_grain_and_normalise(image_path, scalefactor):
     if (type(scalefactor) is float and scalefactor < 1):
         image = load_image(image_path)
         # Assumes image dimensions [t,x,y], bicubic interpolation
-        image_rescaled = rescale(
-            image, (1, scalefactor, scalefactor), anti_aliasing=False, order=3)
-        image_normalised = np.zeros_like(image_rescaled)
-        for i in range(image_rescaled.shape[0]):
-            image_normalised[i, ...] = image_rescaled[i, ...] / \
-                np.mean(image_rescaled[i, ...])
+        # image_rescaled = rescale(
+        #    image, (1, scalefactor, scalefactor), anti_aliasing=False, order=3)
+        image_normalised = np.zeros((np.ceil(
+            [image.shape[0],
+             image.shape[1]*scalefactor,
+             image.shape[2]*scalefactor])).astype(int))
+        for i in range(image.shape[0]):
+            # Use Matlab-esque rescaling
+            image_rescaled = imresize(image[i, ...], scalar_scale=scalefactor)
+            image_normalised[i, ...] = image_rescaled / np.mean(image_rescaled)
     else:
         print('scalefactor should be less than 1')
     return image_normalised
@@ -135,7 +140,7 @@ def cross_correlation(image1, image2, scalefactor, offset):
         multipe_of_stds = (np.std(t, axis=0)*np.std(tshift, axis=0))
         corr_small = (total_of_multiple/tshift.shape[0])/multipe_of_stds
         corr[i, ...] = rescale(corr_small, 1/scalefactor,
-                               anti_aliasing=False, order=3)
+                               anti_aliasing=False, order=3)  # check
     return corr
 
 
