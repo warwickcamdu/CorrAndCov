@@ -178,10 +178,20 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
         Saves .png file in save_location
     '''
     fig = plt.figure()
-    plt.scatter(CoV_actin[corr >= 0], corr[corr >= 0],
-                marker='o', facecolors='none', edgecolors='blue')
-    plt.scatter(CoV_actin[corr < 0], corr[corr < 0],
-                marker='o', facecolors='none', edgecolors='red')
+    # plt.scatter(CoV_actin[corr >= 0], corr[corr >= 0],
+    #              marker='o', facecolors='none', edgecolors='blue')
+    # plt.scatter(CoV_actin[corr < 0], corr[corr < 0],
+    #            marker='o', facecolors='none', edgecolors='red')
+    x1 = CoV_actin
+    x1[corr < 0] = 0
+    y1 = corr
+    y1[corr < 0] = 0
+    plt.scatter(x1, y1, marker='o', facecolors='none', edgecolors='blue')
+    x1 = CoV_actin
+    x1[corr >= 0] = 0
+    y1 = corr
+    y1[corr >= 0] = 0
+    plt.scatter(x1, y1, marker='o', facecolors='none', edgecolors='red')
     plt.title(title)
     plt.xlabel('Actin Coeff of Variation')
     plt.ylabel('Cross correlation value')
@@ -243,7 +253,7 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
 def main():
     data_path = '/home/laura/WMS_Files/ProjectSupport/DK_Corr/' \
                 '3011_ATP_Example/data files'
-    scalefactor = 0.2
+    scalefactor = 0.25
     offset = 10
     actin_folder = 'actin'
     calculate_and_create_figures(data_path, actin_folder, scalefactor, offset)
