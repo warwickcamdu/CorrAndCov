@@ -172,13 +172,10 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
         Saves .png file in save_location
     '''
     fig = plt.figure()
-    x1 = np.copy(CoV_actin)
-    y1 = np.copy(corr)
-    y1[corr < 0] = 0
-    plt.scatter(x1, y1, marker='o', facecolors='none', edgecolors='blue')
-    y2 = np.copy(corr)
-    y2[corr >= 0] = 0
-    plt.scatter(x1, y2, marker='o', facecolors='none', edgecolors='red')
+    plt.scatter(CoV_actin[corr < 0], corr[corr < 0],
+                marker='o', facecolors='none', edgecolors='blue')
+    plt.scatter(CoV_actin[corr >= 0], corr[corr >= 0],
+                marker='o', facecolors='none', edgecolors='red')
     plt.title(title)
     plt.xlabel('Actin Coeff of Variation')
     plt.ylabel('Cross correlation value')
@@ -186,6 +183,10 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
     plt.ylim((-1, 1))
     # plt.show()
     fig.savefig(os.path.join(save_location, title+'.png'))
+    np.savetxt(os.path.join(save_location, 'data_'+title+'.csv'),
+               np.vstack((np.ravel(CoV_actin), np.ravel(corr))).T,
+               delimiter=',',
+               header='Actin Coeff of Variation,Cross correlation value')
     plt.close()
 
 
