@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>CorrFunctions module &#8212; CorrAndCov 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="matlab_imresize package" href="matlab_imresize.html" />
+    <link rel="prev" title="CorrAndCov module" href="CorrAndCov.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-CorrFunctions">
+<span id="corrfunctions-module"></span><h1>CorrFunctions module<a class="headerlink" href="#module-CorrFunctions" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.calculate_and_create_figures">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">calculate_and_create_figures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actin_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalefactor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.calculate_and_create_figures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in data, calculate auto- and cross-correlation and coefficient of
+variance, output images and figures of results.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>data_path (str): path to folder where data is stored
+actin_folder (str): name of folder containing actin images
+scalefactor (float): scale factor to downscale image by
+offset (int): shift in pixels relative to the reference image</p>
+</dd>
+<dt>Returns:</dt><dd><p>Saves .png files in folder above data folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.coarse_grain_and_normalise">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">coarse_grain_and_normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalefactor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.coarse_grain_and_normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load image, rescale and normalise.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>image_path (str): location of image to open
+scalefactor (float, tuple of floats): scale factor to downsize image by</p>
+</dd>
+<dt>Returns:</dt><dd><p>image_normalised (array): image rescaled and normalised by mean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.coefficient_of_variation">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">coefficient_of_variation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalefactor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.coefficient_of_variation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate coefficient of variation</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>image (numpy array): 2D+t image
+scalefactor (float): scale factor to upscale resulting CoV image</p>
+</dd>
+<dt>Returns:</dt><dd><p>CoV_map (numpy array): Calculated CoV (2D)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.create_image_dictionary">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">create_image_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalefactor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.create_image_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dictionary containing all the normalised images and their names</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>data_path (str): path to folder where data is stored
+scalefactor (float): scale factor to downscale image by</p>
+</dd>
+<dt>Returns:</dt><dd><p>image_dict (dict): names and normalised images e.g.
+image_dict[‘3011_SLB3_12sec.tif’][‘actin’] would return the numpy array
+of the actin channel of image 3011_SLB3_12sec.tif</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.create_scatter_figure">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">create_scatter_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CoV_actin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.create_scatter_figure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot actin coefficient of variation against cross-correlation values and
+save figure</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>CoV_actin (numpy array): coefficient of variation for actin channel
+corr (numpy array): Cross-correlation values from another channel
+title (string): Title of figure
+save_location (string): Path to location to save data</p>
+</dd>
+<dt>Returns:</dt><dd><p>Saves .png file in save_location</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.cross_correlation">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">cross_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalefactor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.cross_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto- and cross-correlation</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>image1, image2 (numpy arrays): images to compare
+offset (int): shift in pixels relative to the reference image
+scalefactor (float): scale factor to upscale image by</p>
+</dd>
+<dt>Returns:</dt><dd><p>corr (list of floats): list of corrolation values for each offset value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.end_java_vm">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">end_java_vm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.end_java_vm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop javabridge</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.get_names">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">get_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.get_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get names of folders and images in data_path</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>data_path (str): path to folder where data is stored</p>
+</dd>
+<dt>Returns:</dt><dd><p>folders (list of str): list of folders in data_path
+imlist (list of str): list of filenames in first folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.load_image">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">load_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.load_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load 2D+t images to an numpy array using bioformats</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>image_path (str): location of image to open</p>
+</dd>
+<dt>Returns:</dt><dd><p>image (array): image represented as an array with dimensions [t,x,y]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.main">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CorrFunctions.start_java_vm">
+<span class="sig-prename descclassname"><span class="pre">CorrFunctions.</span></span><span class="sig-name descname"><span class="pre">start_java_vm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CorrFunctions.start_java_vm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start javabridge so bioformats works</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CorrAndCov</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">CorrAndCov</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CC_App.html">CC_App module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CorrAndCov.html">CorrAndCov module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CorrFunctions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matlab_imresize.html">matlab_imresize package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">CorrAndCov</a><ul>
+      <li>Previous: <a href="CorrAndCov.html" title="previous chapter">CorrAndCov module</a></li>
+      <li>Next: <a href="matlab_imresize.html" title="next chapter">matlab_imresize package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Laura190.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/CorrFunctions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
