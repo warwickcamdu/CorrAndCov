@@ -157,4 +157,4 @@ class home(QMainWindow):
 
     def open_doc(self):
         webbrowser.open(
-            "https://laura190.github.io/MetadataCollection/")
+            "https://laura190.github.io/CorrAndCov/")
