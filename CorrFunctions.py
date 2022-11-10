@@ -8,20 +8,6 @@ import tifffile as tif
 from matlab_imresize.imresize import imresize
 
 
-def start_java_vm():
-    '''
-    Start javabridge so bioformats works
-    '''
-    javabridge.start_vm(class_path=bioformats.JARS, run_headless=True)
-
-
-def end_java_vm():
-    '''
-    Stop javabridge
-    '''
-    javabridge.kill_vm()
-
-
 def load_image(image_path):
     '''
     Load 2D+t images to an numpy array using bioformats
@@ -32,16 +18,7 @@ def load_image(image_path):
     Returns:
         image (array): image represented as an array with dimensions [t,x,y]
     '''
-    # Get metadata
-    xml_string = bioformats.get_omexml_metadata(image_path)
-    ome = bioformats.OMEXML(xml_string)
-    raw_data = []
-    with bioformats.ImageReader(image_path) as rdr:
-        for t in range(ome.image().Pixels.get_SizeT()):
-            # Don't rescale intensities
-            raw_image = rdr.read(t=t, rescale=False)
-            raw_data.append(raw_image)
-    image = np.array(raw_data)
+    image = tif.imread(image_path)
     return image
 
 
@@ -206,7 +183,6 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
     '''
     try:
         # run steps
-        start_java_vm()
         image_dict = create_image_dictionary(data_path, scalefactor)
         for im in image_dict.keys():
             results_path = os.path.join(os.path.dirname(data_path), 'corr_'+im)
@@ -244,7 +220,7 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
                         create_scatter_figure(
                             cov_act, corr[co, ...], title, results_path)
     finally:
-        end_java_vm()
+        print('Complete')
 
 
 def main():
