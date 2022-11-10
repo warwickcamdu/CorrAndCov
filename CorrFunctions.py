@@ -1,12 +1,11 @@
-# dkCorr functions, pseudo code
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 import javabridge
 import bioformats
-from skimage.transform import rescale
 import tifffile as tif
-from imresize import imresize
+from matlab_imresize.imresize import imresize
 
 
 def start_java_vm():
@@ -60,9 +59,6 @@ def coarse_grain_and_normalise(image_path, scalefactor):
     # Make this float only and force not scaling of time dimension?
     if (type(scalefactor) is float and scalefactor < 1):
         image = load_image(image_path)
-        # Assumes image dimensions [t,x,y], bicubic interpolation
-        # image_rescaled = rescale(
-        #    image, (1, scalefactor, scalefactor), anti_aliasing=False, order=3)
         image_normalised = np.zeros((np.ceil(
             [image.shape[0],
              image.shape[1]*scalefactor,
@@ -130,17 +126,16 @@ def cross_correlation(image1, image2, scalefactor, offset):
     '''
     if offset > image1.shape[0]:
         offset = image1.shape[0]-1
-    corr = np.zeros([offset, int((1/scalefactor)*image1.shape[1]),
-                    int((1/scalefactor)*image1.shape[2])])
-    for i in range(offset):
+    corr = np.zeros([offset, image1.shape[1], image1.shape[2]])
+    for i in range(0, offset, 1):
         tshift = np.roll(image2, i, axis=0)
         t = image1[i:, :, :] - np.mean(image1[i:, :, :], axis=0)
         tshift = tshift[i:, :, :] - np.mean(tshift[i:, :, :], axis=0)
         total_of_multiple = np.sum(np.multiply(t, tshift), axis=0)
-        multipe_of_stds = (np.std(t, axis=0)*np.std(tshift, axis=0))
-        corr_small = (total_of_multiple/tshift.shape[0])/multipe_of_stds
-        corr[i, ...] = rescale(corr_small, 1/scalefactor,
-                               anti_aliasing=False, order=3)  # check
+        multipe_of_stds = (np.std(t, axis=0, ddof=1)
+                           * np.std(tshift, axis=0, ddof=1))
+        corr_small = (total_of_multiple/(tshift.shape[0]-1))/multipe_of_stds
+        corr[i, ...] = corr_small
     return corr
 
 
@@ -157,9 +152,8 @@ def coefficient_of_variation(image, scalefactor):
     '''
     # Calculate coefficinet of variation
     mean_t_image = np.mean(image, axis=0)
-    std_t_image = np.std(image, axis=0)
+    std_t_image = np.std(image, axis=0, ddof=1)
     CoV_map = std_t_image/np.mean(mean_t_image)
-    CoV_map = rescale(CoV_map, 1/scalefactor, anti_aliasing=False, order=3)
     return CoV_map
 
 
@@ -178,20 +172,13 @@ def create_scatter_figure(CoV_actin, corr, title, save_location):
         Saves .png file in save_location
     '''
     fig = plt.figure()
-    # plt.scatter(CoV_actin[corr >= 0], corr[corr >= 0],
-    #              marker='o', facecolors='none', edgecolors='blue')
-    # plt.scatter(CoV_actin[corr < 0], corr[corr < 0],
-    #            marker='o', facecolors='none', edgecolors='red')
-    x1 = CoV_actin
-    x1[corr < 0] = 0
-    y1 = corr
+    x1 = np.copy(CoV_actin)
+    y1 = np.copy(corr)
     y1[corr < 0] = 0
     plt.scatter(x1, y1, marker='o', facecolors='none', edgecolors='blue')
-    x1 = CoV_actin
-    x1[corr >= 0] = 0
-    y1 = corr
-    y1[corr >= 0] = 0
-    plt.scatter(x1, y1, marker='o', facecolors='none', edgecolors='red')
+    y2 = np.copy(corr)
+    y2[corr >= 0] = 0
+    plt.scatter(x1, y2, marker='o', facecolors='none', edgecolors='red')
     plt.title(title)
     plt.xlabel('Actin Coeff of Variation')
     plt.ylabel('Cross correlation value')
@@ -227,10 +214,11 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
             for ch in image_dict[im].keys():
                 cov = coefficient_of_variation(image_dict[im][ch], scalefactor)
                 tif.imsave(os.path.join(
-                    results_path, 'cov_'+im+'_'+ch+'.tif'), cov)
+                    results_path, 'cov_'+im+'_'+ch+'.tif'),
+                           imresize(cov, scalar_scale=1/scalefactor))
                 if ch == actin_folder:
                     cov_act = cov
-            combinations = [tuple(sorted((f, s)))
+            combinations = [tuple(sorted((f, s), reverse=True))
                             for f in image_dict[im].keys()
                             for s in image_dict[im].keys()]
             for c in set(combinations):
@@ -239,8 +227,16 @@ def calculate_and_create_figures(data_path, actin_folder, scalefactor, offset):
                     image_dict[im][c[1]],
                     scalefactor,
                     offset)
+                # Rescale corr to original image size
+                corr_large = np.zeros([corr.shape[0],
+                                      int(corr.shape[1]/scalefactor),
+                                      int(corr.shape[2]/scalefactor)])
+                for i in range(corr.shape[0]):
+                    corr_large[i, ...] = imresize(corr[i, ...],
+                                                  scalar_scale=1/scalefactor)
                 tif.imsave(os.path.join(results_path, 'corr_'
-                           + im+'_'+c[0]+c[1]+'.tif'), corr)
+                           + im+'_'+c[0]+c[1]+'.tif'), corr_large
+                           )
                 for co in range(corr.shape[0]):
                     if c[0] != c[1]:
                         title = 'CoVA_CC_'+im+'_'+c[0]+c[1]+'_'+str(co)
