@@ -18,3 +18,4 @@ conda env create -n myenv --file environment.yaml
 conda activate myenv
 python CorrAndCov.py
 ```
+This code uses https://github.com/fatheral/matlab_imresize
