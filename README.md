@@ -4,7 +4,10 @@ Based on code originally written by Kabir & Darius to calculate time-crosscorrel
 
 Adapted to Python by Laura190, camdu@warwick.ac.uk
 
-Download the bundled version from the latest release.
+Download the bundled version from the latest release. \
+Windows 10: https://github.com/Laura190/CorrAndCov/releases/download/v0.0.1/CorrAndCov_Win10.zip \
+Ubuntu 20: https://github.com/Laura190/CorrAndCov/releases/download/v0.0.1/CorrAndCov_Ubuntu20.zip \
+Unzip the folder and run the CorrAndCov executable within.
 
 ### What the code does
 1. Coarse-grains the images
