@@ -4,6 +4,8 @@ Based on code originally written by Kabir & Darius to calculate time-crosscorrel
 
 Adapted to Python by Laura190, camdu@warwick.ac.uk
 
+Download the bundled version from the latest release.
+
 ### What the code does
 1. Coarse-grains the images
 2. Calculates time Autocorrelation function for each box in Act channel using different time lags (Offset)
