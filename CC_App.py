@@ -15,7 +15,7 @@ class home(QMainWindow):
         self.resize(600, 600)
         self.setWindowTitle('Corr and CoV')
         self.setWindowIcon(QIcon('square_black.jpg'))
-        self.settings = QSettings()
+        self.settings = QSettings("CAMDU","CorrAndCov")
         # Default settings
         if not self.settings.value('Data Folder'):
             user_home = os.path.expanduser("~")
@@ -25,9 +25,9 @@ class home(QMainWindow):
                 'Actin Folder', os.path.basename(
                     self.settings.value('Data Folder')))
         if not self.settings.value('Scale Factor'):
-            self.settings.setValue('Scale Factor', 0.25)
+            self.settings.setValue('Scale Factor', '0.25')
         if not self.settings.value('Offset'):
-            self.settings.setValue('Offset', 60)
+            self.settings.setValue('Offset', '60')
         # Menu setup
         menu_bar = self.menuBar()
         help_menu = menu_bar.addMenu('&Help')
