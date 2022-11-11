@@ -2,8 +2,6 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import javabridge
-import bioformats
 import tifffile as tif
 from matlab_imresize.imresize import imresize
 
