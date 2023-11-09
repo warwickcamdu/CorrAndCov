@@ -24,3 +24,6 @@ conda activate myenv
 python CorrAndCov.py
 ```
 This code uses https://github.com/fatheral/matlab_imresize
+
+### Documentation
+https://warwickcamdu.github.io/CorrAndCov/
